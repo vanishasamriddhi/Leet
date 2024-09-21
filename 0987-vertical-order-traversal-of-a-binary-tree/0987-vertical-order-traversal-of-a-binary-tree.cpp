@@ -12,36 +12,43 @@
 class Solution {
 public:
     vector<vector<int>> verticalTraversal(TreeNode* root) {
-        map<int, map<int, vector<int>>> nodes; // Change to vector instead of multiset
-        queue<pair<TreeNode*, pair<int, int>>> todo;
-        todo.push({root, {0, 0}});
-        
-        while (!todo.empty()) {
-            auto p = todo.front();
-            todo.pop();
-            TreeNode* node = p.first;
-            int x = p.second.first, y = p.second.second;
-            
-            nodes[x][y].push_back(node->val); // Insert into vector
-            
-            if (node->left) {
-                todo.push({node->left, {x - 1, y + 1}});
-            }
-            if (node->right) {
-                todo.push({node->right, {x + 1, y + 1}});
-            }
+        vector<vector<int>> ans; 
+        queue<pair<TreeNode*,pair<int,int>>> q;// Node ,{row,column}
+        q.push(make_pair(root,make_pair(0,0)));
+        map<int,map<int,multiset<int>>>mp;// col-> {row:[x,y,z ....]}
+
+        while(!q.empty())
+        {
+           auto q1=q.front();
+           q.pop();
+           TreeNode* newnode=q1.first;//It takes data type automatically on the basis of inpt first
+           auto cordinate=q1.second;
+           int row=cordinate.first;
+           int col=cordinate.second;
+           mp[col][row].insert(newnode->val);
+           if(newnode->left)
+           {
+            q.push({newnode->left,{row+1,col-1}});
+           }
+           if(newnode->right)
+           {
+            q.push({newnode->right,{row+1,col+1}});
+           }
+           
+           
         }
-        
-        vector<vector<int>> ans;
-        for (auto& p : nodes) {
-            vector<int> col;
-            for (auto& q : p.second) {
-                sort(q.second.begin(), q.second.end()); // Sort vector elements
-                col.insert(col.end(), q.second.begin(), q.second.end());
+        // stote final vertical order into ans vector
+        for(auto it:mp)
+           {
+            auto colMap=it.second;
+            vector<int>Line;
+            for(auto colMapIt:colMap)
+            {
+                auto mset=colMapIt.second;
+                Line.insert(Line.end(),mset.begin(),mset.end());
             }
-            ans.push_back(col);
-        }
-        
+            ans.push_back(Line);
+           }
         return ans;
     }
 };
