@@ -13,7 +13,7 @@ public:
     ListNode* oddEvenList(ListNode* head) {
         if(head==nullptr || head->next==nullptr) return head;
         
-        ListNode* temp =head, *odd = head, *even=odd->next, *evenhead=even ;
+        ListNode *odd = head, *even=odd->next, *evenhead=even ;
         
         while(even!= nullptr &&even->next!=nullptr){
             odd->next=even->next;
